@@ -2,6 +2,7 @@ import React from 'react';
 import {
   Route,
   Switch,
+  Link
 } from 'react-router-dom';
 import './App.css';
 
@@ -14,52 +15,78 @@ class App extends React.Component {
         value: 12,
         possible_values: [3, 6, 12],
       },
+
       gigabytes: {
         value: 5,
         possible_values: [3, 5, 10, 20, 30, 50],
       },
-      upfrontPayment: {
-        value: false,
-      },
+
+      upfrontPayment: false,
+
       firstName: {
-        value: null,
+        value: '',
         required: true,
         error: null,
       },
+
       lastName: {
-        value: null,
+        value: '',
         required: true,
         error: null,
       },
+
       email: {
-        value: null,
+        value: '',
         required: true,
         error: null,
       },
+
       streetAdress: {
-        value: null,
+        value: '',
         required: true,
         error: null,
       },
+
       cardNumber: {
-        value: null,
+        value: '',
         required: true,
         error: null,
       },
+
       cardExpDate: {
-        value: null,
+        value: '',
         required: true,
         error: null,
       },
+
       cardCVV: {
-        value: null,
+        value: '',
         required: true,
         error: null,
       },
-      termsAgreement: {
-        value: false,
-      }
+
+      cardHolderName: {
+        value: '',
+        required: true,
+        error: null,
+      },
+
+      isAgreed: false,
+
     };
+
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange(e) {
+    const target = e.target;
+
+    this.setState({
+      [target.id]: {
+        ...this.state[target.id],
+        value: Number(target.value),
+      }
+    });
   }
 
   render() {
@@ -73,52 +100,49 @@ class App extends React.Component {
               return (
                 <div>
                   <p>Select a subscription duration:</p>
-                  <div>
-                    <input
-                      type="radio"
-                      id="quarter"
-                      name="duration"
-                      value="quarter"
-                    />
-                    <label for="quarter">3</label>
-                  </div>
-                  <div>
-                    <input
-                      type="radio"
-                      id="half-year"
-                      name="duration"
-                      value="half-year"
-                    />
-                    <label for="half-year">6</label>
-                  </div>
-                  <div>
-                    <input
-                      type="radio"
-                      id="year"
-                      name="duration"
-                      value="year"
-                      checked
-                    />
-                    <label for="year">12</label>
-                  </div>
-                  <label for="gigabytes-select">Choose amount of your cloud gigabytes:</label>
-                  <select name="gigabytes" id="gigabytes-select">
-                    <option>3</option>
-                    <option selected>5</option>
-                    <option>10</option>
-                    <option>20</option>
-                    <option>30</option>
-                    <option>50</option>
+                    {this.state.duration.possible_values.map((value) => {
+                      return (
+                        <div key={`duration${value}`}>
+                          <label htmlFor="duration">
+                            {value} Month
+                          </label>
+                          <input
+                            type="radio"
+                            id="duration"
+                            name="duration"
+                            value={value}
+                            onChange={this.handleChange}
+                            checked={value === this.state.duration.value}
+                          />
+                      </div>
+                      );
+                    })}
+                  <label htmlFor="gigabytes-select">Choose amount of your cloud gigabytes:</label>
+                  <select 
+                    name="gigabytes"
+                    id="gigabytes-select"
+                    value= {this.state.gigabytes.value}
+                    defaultValue= "5"
+                    onChange={this.handleChange}  
+                  >
+                    <option value="3">3</option>
+                    <option defaultValue>5</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="30">30</option>
+                    <option value="50">50</option>
                   </select>
-                  <div class="upfront-payment">
-                    <label for="upfront">Upfront payment:</label>
+                  <div className="upfront-payment">
+                    <label htmlFor="upfront">Upfront payment:</label>
                     <input
                       type="radio"
                       id="upfront"
-                      name="upfront"
+                      name="upfrontPayment"
+                      value={this.state.upfrontPayment}
+                      onChange={this.handleChange}
                     />
                   </div>
-                  <a class="submit-button" href="/step-2">Next</a>
+                  <Link className="next-button" to="/step-2">Next</Link>
                 </div>
               );
             }}
@@ -128,48 +152,56 @@ class App extends React.Component {
             component={() => {
               return (
                 <div>
-                  <form action="" method="get" class="user-data">
-                    <div class="user-data">
-                      <label for="name">First name:</label>
+                  <form action="" method="get">
+                    <div className="user-data">
+                      <label htmlFor="name">First name:</label>
                       <input
                         type="text"
-                        name="first-name"
+                        name="firstName"
                         id="name"
+                        value={this.state.firstName.value}
+                        onChange={this.handleChange}
                         required
                       />
                     </div>
-                    <div class="user-data">
-                      <label for="name">Last name:</label>
+                    <div className="user-data">
+                      <label htmlFor="name">Last name:</label>
                       <input
                         type="text"
-                        name="last-name"
+                        name="lastName"
                         id="name"
+                        value={this.state.lastName.value}
+                        onChange={this.handleChange}
                         required
                       />
                     </div>
-                    <div class="user-data">
-                      <label for="email">Email: </label>
+                    <div className="user-data">
+                      <label htmlFor="email">Email: </label>
                       <input
                         type="email"
                         name="email"
                         id="email"
                         pattern="^[^@]+@[^@]+\.[^@]+$"
+                        value={this.state.email.value}
+                        onChange={this.handleChange}
                         required
                       />
                     </div>
-                    <div class="user-data">
-                      <label for="street-address">Street Address:</label>
+                    <div className="user-data">
+                      <label htmlFor="street-address">Street Address:</label>
                       <input
                         type="text"
-                        name="street"
+                        name="streetAdress"
                         id="street-address"
+                        value={this.state.streetAdress.value}
+                        onChange={this.handleChange}
                         required
                       />
                     </div>
                   </form>
-                  <div class="buttons">
-                    <a class="return-button" href="/">Back</a>
-                    <a class="submit-button" href="/step-3">Next</a>
+                  <div className="buttons">
+                    <Link className="return-button" to="/">Back</Link>
+                    <Link className="next-button" to="/step-3">Next</Link>
                   </div>
                 </div>
               );
@@ -179,60 +211,68 @@ class App extends React.Component {
             component={() => {
               return (
                 <div>
-                  <form action="" method="get" class="card-data">
-                  <div class="payment__inputs">
-                    <div class="payment__card-group">
-                      <p class="text-input">
-                        <input
-                          type="text"
-                          class="text-input__input"
-                          name="card-number"
-                          id="payment__card-number"
-                          required
-                        />
-                        <label class="text-input__label" for="payment__card-number">Payment card number</label>
-                      </p>
-                      <p class="text-input">
-                        <input
-                          type="text"
-                          class="text-input__input"
-                          name="card-date"
-                          id="payment__card-date"
-                          placeholder="mm/yy"
-                          pattern="^((0[1-9])|(1[0-2]))\/(\d{2})$"
-                          required
-                        />
-                        <label class="text-input__label" for="payment__card-date">mm/yy</label>
-                      </p>
-                      <p class="text-input">
-                        <input
-                          type="text"
-                          class="text-input__input"
-                          name="card-cvc"
-                          id="payment__card-cvc"
-                          pattern="[1-9][0-9][0-9]"
-                          required
-                        />
-                        <label class="text-input__label" for="payment__card-cvc">CVC</label>
-                      </p>
+                  <form action="" method="get" className="card-data">
+                    <div className="payment__inputs">
+                      <div className="payment__card-group">
+                        <p className="text-input">
+                          <input
+                            type="text"
+                            class="text-input__input"
+                            name="cardNumber"
+                            id="payment__card-number"
+                            value={this.state.cardNumber.value}
+                            onChange={this.handleChange}
+                            required
+                          />
+                          <label className="text-input__label" htmlFor="payment__card-number">Payment card number</label>
+                        </p>
+                        <p className="text-input">
+                          <label className="text-input__label" htmlFor="payment__card-date">mm/yy</label>
+                          <input
+                            type="text"
+                            className="text-input__input"
+                            name="cardExpDate"
+                            id="payment__card-date"
+                            placeholder="mm/yy"
+                            pattern="^((0[1-9])|(1[0-2]))\/(\d{2})$"
+                            value={this.state.cardExpDate.value}
+                            onChange={this.handleChange}
+                            required
+                          />
+                        </p>
+                        <p className="text-input">
+                          <label className="text-input__label" htmlFor="payment__card-cvv">CVC</label>
+                          <input
+                            type="text"
+                            class="text-input__input"
+                            name="cardCVV"
+                            id="payment__card-cvv"
+                            pattern="[1-9][0-9][0-9]"
+                            value={this.state.cardCVV.value}
+                            onChange={this.handleChange}
+                            required
+                          />  
+                        </p>
+                      </div>
+                      <div className="payment__cardholder-group">
+                        <p className="text-input">
+                          <label className="text-input__label" htmlFor="payment__cardholder">Cardholder name</label>
+                          <input
+                            type="text"
+                            className="text-input__input"
+                            name="cardHolderName"
+                            id="payment__cardholder"
+                            value={this.state.cardHolderName.value}
+                            onChange={this.handleChange}
+                            required
+                          /> 
+                        </p>
+                      </div>
                     </div>
-                    <div class="payment__cardholder-group">
-                      <p class="text-input">
-                        <input
-                          type="text"
-                          class="text-input__input"
-                          name="cardholder"
-                          id="payment__cardholder"
-                          required
-                        />
-                        <label class="text-input__label" for="payment__cardholder">Cardholder name</label>
-                      </p>
-                    </div>
-                  </div>
                   </form>
-                  <div class="buttons">
-                    <a class="return-button" href="/step-2">Back</a>
-                    <a class="submit-button" href="/step-4">Next</a>
+                  <div className="buttons">
+                    <Link className="return-button" to="/step-2">Back</Link>
+                    <Link className="next-button" to="/step-4">Next</Link>
                   </div>
                 </div>
               );
@@ -242,40 +282,42 @@ class App extends React.Component {
             component={() => {
               return (
                 <div>
-                  <div class="order-summary">
-                    <ul class="subscription-parameters-list">
-                      <li>Duration:</li>
-                      <li>Amount of gigabytes in a cloud:</li>
-                      <li>Upfront payment:</li>
+                  <div className="order-summary">
+                    <ul className="subscription-parameters-list">
+                      <li>Duration: </li>
+                      <li>Amount of gigabytes in a cloud: {this.state.gigabytes.value}</li>
+                      <li>Upfront payment: {() => { return (this.state.upfrontPayment.value) ? "Yes" : "No" }}</li>
                     </ul>
-                    <ul class="user-data-list">
-                      <li>First name</li>
-                      <li>Last name</li>
-                      <li>Email</li>
-                      <li>Street Address</li>
+                    <ul className="user-data-list">
+                      <li>{this.state.firstName.value}</li>
+                      <li>{this.state.lastName.value}</li>
+                      <li>{this.state.email.value}</li>
+                      <li>{this.state.streetAdress.value}</li>
                     </ul>
-                    <ul class="card-data-list">
-                      <li>Card number</li>
-                      <li>Card expiration date</li>
-                      <li>Card security code</li>
-                      <li>Cardholder name</li>
+                    <ul className="card-data-list">
+                      <li>{this.state.cardNumber.value}</li>
+                      <li>{this.state.cardExpDate.value}</li>
+                      <li>{this.state.cardCVV.value}</li>
+                      <li>{this.state.cardHolderName.value}</li>
                     </ul>
-                    <p class="price-output">$100</p>
-                    <p class="discount">- 10%</p>
+                    <p className="price-output">$100</p>
+                    <p className="discount">- 10%</p>
                   </div>
-                  <div class="terms-agreement-container">
-                    <label for="terms-agreement">Check here to indicate that you have read and agree to the terms of the 
-                      <a href="https://cloud.google.com/terms/">Cloud Storage Terms of Service</a>
-                    </label>
+                  <div className="terms-agreement-container">
                     <input
                       type="radio"
                       id="terms-agreement"
                       name="terms-agreement"
+                      value={this.state.isAgreed}
+                      onChange={this.handleChange}
                     />
+                    <label htmlFor="terms-agreement">
+                      Check here to indicate that you have read and agree to the terms of the <a href="https://cloud.google.com/terms/">Cloud Storage Terms of Service</a>
+                    </label>
                   </div>
-                  <div class="buttons">
-                    <a class="return-button" href="/step-3">Back</a>
-                    <button class="submit-order" type="submit">Confirm order</button>
+                  <div className="buttons">
+                    <Link className="return-button" to="/step-3">Back</Link>
+                    <button className="submit-order" type="submit">Confirm order</button>
                   </div>
                 </div>
               );
