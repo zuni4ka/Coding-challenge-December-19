@@ -90,6 +90,8 @@ class App extends React.Component {
   }
 
   render() {
+    const {state} = this;
+
     return (
       <div className="App">
         <Switch>
@@ -100,7 +102,7 @@ class App extends React.Component {
               return (
                 <div>
                   <p>Select a subscription duration:</p>
-                    {this.state.duration.possible_values.map((value) => {
+                    {state.duration.possible_values.map((value) => {
                       return (
                         <div key={`duration${value}`}>
                           <label htmlFor="duration">
@@ -112,7 +114,7 @@ class App extends React.Component {
                             name="duration"
                             value={value}
                             onChange={this.handleChange}
-                            checked={value === this.state.duration.value}
+                            checked={value === state.duration.value}
                           />
                       </div>
                       );
@@ -120,17 +122,19 @@ class App extends React.Component {
                   <label htmlFor="gigabytes-select">Choose amount of your cloud gigabytes:</label>
                   <select 
                     name="gigabytes"
-                    id="gigabytes-select"
-                    value= {this.state.gigabytes.value}
-                    defaultValue= "5"
-                    onChange={this.handleChange}  
+                    id="gigabytes"
+                    onChange={this.handleChange}
+                    value={state.gigabytes.value}
                   >
-                    <option value="3">3</option>
-                    <option defaultValue>5</option>
-                    <option value="10">10</option>
-                    <option value="20">20</option>
-                    <option value="30">30</option>
-                    <option value="50">50</option>
+                    {state.gigabytes.possible_values.map((value) => {
+                      return (
+                        <option
+                          key={`gigabytes${value}`}
+                        >
+                          {value}
+                        </option>
+                      );
+                    })}
                   </select>
                   <div className="upfront-payment">
                     <label htmlFor="upfront">Upfront payment:</label>
