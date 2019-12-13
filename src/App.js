@@ -21,7 +21,9 @@ class App extends React.Component {
         possible_values: [3, 5, 10, 20, 30, 50],
       },
 
-      upfrontPayment: false,
+      upfrontPayment: {
+        value: false,
+      },
 
       firstName: {
         value: '',
@@ -71,22 +73,32 @@ class App extends React.Component {
         error: null,
       },
 
-      isAgreed: false,
-
+      isAgreed: {
+        value: false,
+      }
     };
 
-    this.handleChange = this.handleChange.bind(this);
+    this.handleBooleanChange = this.handleBooleanChange.bind(this);
+    this.handleNumberChange = this.handleNumberChange.bind(this);
   }
 
-  handleChange(e) {
+  handleChange(e, convert) {
     const target = e.target;
 
     this.setState({
       [target.id]: {
         ...this.state[target.id],
-        value: Number(target.value),
+        value: convert(target.value),
       }
     });
+  }
+
+  handleBooleanChange(e) {
+    this.handleChange(e, (value) => !(value === 'true'));
+  }
+
+  handleNumberChange(e) {
+    this.handleChange(e, Number);
   }
 
   render() {
@@ -113,7 +125,7 @@ class App extends React.Component {
                             id="duration"
                             name="duration"
                             value={value}
-                            onChange={this.handleChange}
+                            onChange={this.handleNumberChange}
                             checked={value === state.duration.value}
                           />
                       </div>
@@ -123,7 +135,7 @@ class App extends React.Component {
                   <select 
                     name="gigabytes"
                     id="gigabytes"
-                    onChange={this.handleChange}
+                    onChange={this.handleNumberChange}
                     value={state.gigabytes.value}
                   >
                     {state.gigabytes.possible_values.map((value) => {
@@ -139,11 +151,12 @@ class App extends React.Component {
                   <div className="upfront-payment">
                     <label htmlFor="upfront">Upfront payment:</label>
                     <input
-                      type="radio"
-                      id="upfront"
+                      type="checkbox"
+                      id="upfrontPayment"
                       name="upfrontPayment"
-                      value={this.state.upfrontPayment}
-                      onChange={this.handleChange}
+                      value={this.state.upfrontPayment.value}
+                      onChange={this.handleBooleanChange}
+                      checked={this.state.upfrontPayment.value}
                     />
                   </div>
                   <Link className="next-button" to="/step-2">Next</Link>
@@ -309,11 +322,12 @@ class App extends React.Component {
                   </div>
                   <div className="terms-agreement-container">
                     <input
-                      type="radio"
-                      id="terms-agreement"
-                      name="terms-agreement"
-                      value={this.state.isAgreed}
-                      onChange={this.handleChange}
+                      type="checkbox"
+                      id="isAgreed"
+                      name="isAgreed"
+                      value={this.state.isAgreed.value}
+                      onChange={this.handleBooleanChange}
+                      checked={this.state.isAgreed.value}
                     />
                     <label htmlFor="terms-agreement">
                       Check here to indicate that you have read and agree to the terms of the <a href="https://cloud.google.com/terms/">Cloud Storage Terms of Service</a>
