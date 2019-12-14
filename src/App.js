@@ -4,6 +4,7 @@ import {
   Switch,
   Link
 } from 'react-router-dom';
+import Input from './input';
 import Step1 from './step-1';
 
 import './App.css';
@@ -83,15 +84,18 @@ class App extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleBooleanChange = this.handleBooleanChange.bind(this);
     this.handleNumberChange = this.handleNumberChange.bind(this);
+    this.handleNextStep = this.handleNextStep.bind(this);
   }
 
   handleChange(e, convert) {
     const target = e.target;
+    const field = this.state[target.name];
 
     this.setState({
       [target.name]: {
-        ...this.state[target.name],
+        ...field,
         value: convert ? convert(target.value) : target.value,
+        error: null,
       }
     });
   }
@@ -103,6 +107,31 @@ class App extends React.Component {
   handleNumberChange(e) {
     this.handleChange(e, Number);
   }
+
+  handleNextStep (event, fields) {
+    let isValid = true;
+
+    fields.forEach((name) => {
+      const value = this.state[name].value;
+
+      if (!value) {
+        this.setState({
+          [name]: {
+            ...this.state[name],
+            error: 'this field is required'
+          }
+        })
+
+        isValid = false;
+      }
+    });
+
+    if (isValid) {
+      return;
+    }
+
+    event.preventDefault();
+  };
 
   render() {
     const { state } = this;
@@ -126,56 +155,44 @@ class App extends React.Component {
             render={() => {
               return (
                 <div>
-                  <form action="" method="get">
-                    <div className="user-data">
-                      <label htmlFor="name">First name:</label>
-                      <input
-                        type="text"
-                        name="firstName"
-                        id="firstName"
-                        value={state.firstName.value}
-                        onChange={this.handleChange}
-                        required={state.firstName.required}
-                      />
-                    </div>
-                    <div className="user-data">
-                      <label htmlFor="name">Last name:</label>
-                      <input
-                        type="text"
-                        name="lastName"
-                        id="name"
-                        value={state.lastName.value}
-                        onChange={this.handleChange}
-                        required={state.lastName.required}
-                      />
-                    </div>
-                    <div className="user-data">
-                      <label htmlFor="email">Email: </label>
-                      <input
-                        type="email"
-                        name="email"
-                        id="email"
-                        pattern="^[^@]+@[^@]+\.[^@]+$"
-                        value={state.email.value}
-                        onChange={this.handleChange}
-                        required={state.email.required}
-                      />
-                    </div>
-                    <div className="user-data">
-                      <label htmlFor="street-address">Street Address:</label>
-                      <input
-                        type="text"
-                        name="streetAdress"
-                        id="street-address"
-                        value={state.streetAdress.value}
-                        onChange={this.handleChange}
-                        required={state.streetAdress.required}
-                      />
-                    </div>
-                  </form>
+                  <Input
+                    label="First name:"
+                    name="firstName"
+                    id="firstName"
+                    field={state.firstName}
+                    onChange={this.handleChange}
+                  />
+                  <Input
+                    label="Last name:"
+                    name="lastName"
+                    id="lastName"
+                    field={state.lastName}
+                    onChange={this.handleChange}
+                  />
+                  <Input
+                    label="Email:"
+                    type="email"
+                    name="email"
+                    id="email"
+                    field={state.email}
+                    onChange={this.handleChange}
+                  />
+                  <Input
+                    label="Street Address:"
+                    name="streetAdress"
+                    id="streetAdress"
+                    field={state.streetAdress}
+                    onChange={this.handleChange}
+                  />
                   <div className="buttons">
                     <Link className="return-button" to="/">Back</Link>
-                    <Link className="next-button" to="/step-3">Next</Link>
+                    <Link
+                      className="next-button"
+                      to="/step-3"
+                      onClick={(e) => {
+                        this.handleNextStep(e, ['firstName', 'lastName', 'email', 'streetAdress']);
+                      }}
+                    >Next</Link>
                   </div>
                 </div>
               );
@@ -184,65 +201,49 @@ class App extends React.Component {
             path="/step-3"
             render={() => {
               return (
-                <div>
-                  <form action="" method="get" className="card-data">
-                    <div className="payment-input">
-                      <p className="text-input">
-                        <input
-                          type="text"
-                          className="text-input__input"
-                          name="cardNumber"
-                          id="cardNumber"
-                          value={state.cardNumber.value}
-                          onChange={this.handleChange}
-                          required={state.cardNumber.required}
-                        />
-                        <label className="text-input__label" htmlFor="cardNumber">Payment card number</label>
-                      </p>
-                      <p className="text-input">
-                        <label className="text-input__label" htmlFor="card-date">mm/yy</label>
-                        <input
-                          type="text"
-                          className="text-input__input"
-                          name="cardExpDate"
-                          id="card-date"
-                          placeholder="mm/yy"
-                          pattern="^((0[1-9])|(1[0-2]))\/(\d{2})$"
-                          value={state.cardExpDate.value}
-                          onChange={this.handleChange}
-                          required={state.cardExpDate.required}
-                        />
-                      </p>
-                      <p className="text-input">
-                        <label className="text-input__label" htmlFor="card-cvv">CVC</label>
-                        <input
-                          type="text"
-                          class="text-input__input"
-                          name="cardCVV"
-                          id="card-cvv"
-                          pattern="[1-9][0-9][0-9]"
-                          value={state.cardCVV.value}
-                          onChange={this.handleChange}
-                          required={state.cardCVV.required}
-                        />
-                      </p>
-                      <p className="text-input">
-                        <label className="text-input__label" htmlFor="cardholder-name">Cardholder name</label>
-                        <input
-                          type="text"
-                          className="text-input__input"
-                          name="cardHolderName"
-                          id="cardholder-name"
-                          value={state.cardHolderName.value}
-                          onChange={this.handleChange}
-                          required={state.cardHolderName.required}
-                        />
-                      </p>
-                    </div>
-                  </form>
+                <div className="payment-input">
+                  <Input
+                    label="Payment card number:"
+                    type="number"
+                    name="cardNumber"
+                    id="cardNumber"
+                    field={state.cardNumber}
+                    onChange={this.handleChange}
+                  />
+                  <Input
+                    label="Card expiration date:"
+                    type="number"
+                    name="cardExpDate"
+                    id="cardExpDate"
+                    placeholder="mm/yy"
+                    field={state.cardExpDate}
+                    onChange={this.handleChange}
+                  />
+                  <Input
+                    label="Card security code:"
+                    type="number"
+                    name="cardCVV"
+                    id="cardCVV"
+                    placeholder="mm/yy"
+                    field={state.cardCVV}
+                    onChange={this.handleChange}
+                  /> 
+                  <Input
+                    label="Cardholder name:"
+                    name="cardHolderName"
+                    id="cardHolderName"
+                    field={state.cardHolderName}
+                    onChange={this.handleChange}
+                  />
                   <div className="buttons">
                     <Link className="return-button" to="/step-2">Back</Link>
-                    <Link className="next-button" to="/step-4">Next</Link>
+                    <Link
+                      className="next-button"
+                      to="/step-4"
+                      onClick={(e) => {
+                        this.handleNextStep(e, ['cardNumber', 'cardExpDate', 'cardCVV', 'cardHolderName']);
+                      }}
+                    >Next</Link>
                   </div>
                 </div>
               );
