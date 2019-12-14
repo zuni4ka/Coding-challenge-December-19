@@ -4,6 +4,8 @@ import {
   Switch,
   Link
 } from 'react-router-dom';
+import Step1 from './step-1';
+
 import './App.css';
 
 class App extends React.Component {
@@ -78,6 +80,7 @@ class App extends React.Component {
       }
     };
 
+    this.handleChange = this.handleChange.bind(this);
     this.handleBooleanChange = this.handleBooleanChange.bind(this);
     this.handleNumberChange = this.handleNumberChange.bind(this);
   }
@@ -86,9 +89,9 @@ class App extends React.Component {
     const target = e.target;
 
     this.setState({
-      [target.id]: {
-        ...this.state[target.id],
-        value: convert(target.value),
+      [target.name]: {
+        ...this.state[target.name],
+        value: convert ? convert(target.value) : target.value,
       }
     });
   }
@@ -110,63 +113,17 @@ class App extends React.Component {
           <Route
             path="/"
             exact
-            component={() => {
-              return (
-                <div>
-                  <p>Select a subscription duration:</p>
-                    {state.duration.possible_values.map((value) => {
-                      return (
-                        <div key={`duration${value}`}>
-                          <label htmlFor="duration">
-                            {value} Month
-                          </label>
-                          <input
-                            type="radio"
-                            id="duration"
-                            name="duration"
-                            value={value}
-                            onChange={this.handleNumberChange}
-                            checked={value === state.duration.value}
-                          />
-                      </div>
-                      );
-                    })}
-                  <label htmlFor="gigabytes-select">Choose amount of your cloud gigabytes:</label>
-                  <select 
-                    name="gigabytes"
-                    id="gigabytes"
-                    onChange={this.handleNumberChange}
-                    value={state.gigabytes.value}
-                  >
-                    {state.gigabytes.possible_values.map((value) => {
-                      return (
-                        <option
-                          key={`gigabytes${value}`}
-                        >
-                          {value}
-                        </option>
-                      );
-                    })}
-                  </select>
-                  <div className="upfront-payment">
-                    <label htmlFor="upfront">Upfront payment:</label>
-                    <input
-                      type="checkbox"
-                      id="upfrontPayment"
-                      name="upfrontPayment"
-                      value={this.state.upfrontPayment.value}
-                      onChange={this.handleBooleanChange}
-                      checked={this.state.upfrontPayment.value}
-                    />
-                  </div>
-                  <Link className="next-button" to="/step-2">Next</Link>
-                </div>
-              );
-            }}
+            render={() => (
+              <Step1
+               product={state}
+               handleNumberChange={this.handleNumberChange}
+               handleBooleanChange={this.handleBooleanChange}
+              />
+            )}
           />
           <Route
             path="/step-2"
-            component={() => {
+            render={() => {
               return (
                 <div>
                   <form action="" method="get">
@@ -175,10 +132,10 @@ class App extends React.Component {
                       <input
                         type="text"
                         name="firstName"
-                        id="name"
-                        value={this.state.firstName.value}
+                        id="firstName"
+                        value={state.firstName.value}
                         onChange={this.handleChange}
-                        required
+                        required={state.firstName.required}
                       />
                     </div>
                     <div className="user-data">
@@ -187,7 +144,7 @@ class App extends React.Component {
                         type="text"
                         name="lastName"
                         id="name"
-                        value={this.state.lastName.value}
+                        value={state.lastName.value}
                         onChange={this.handleChange}
                         required
                       />
@@ -199,7 +156,7 @@ class App extends React.Component {
                         name="email"
                         id="email"
                         pattern="^[^@]+@[^@]+\.[^@]+$"
-                        value={this.state.email.value}
+                        value={state.email.value}
                         onChange={this.handleChange}
                         required
                       />
@@ -210,7 +167,7 @@ class App extends React.Component {
                         type="text"
                         name="streetAdress"
                         id="street-address"
-                        value={this.state.streetAdress.value}
+                        value={state.streetAdress.value}
                         onChange={this.handleChange}
                         required
                       />
