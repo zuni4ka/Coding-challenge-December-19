@@ -105,7 +105,7 @@ class App extends React.Component {
   }
 
   render() {
-    const {state} = this;
+    const { state } = this;
 
     return (
       <div className="App">
@@ -115,9 +115,9 @@ class App extends React.Component {
             exact
             render={() => (
               <Step1
-               product={state}
-               handleNumberChange={this.handleNumberChange}
-               handleBooleanChange={this.handleBooleanChange}
+                product={state}
+                handleNumberChange={this.handleNumberChange}
+                handleBooleanChange={this.handleBooleanChange}
               />
             )}
           />
@@ -146,7 +146,7 @@ class App extends React.Component {
                         id="name"
                         value={state.lastName.value}
                         onChange={this.handleChange}
-                        required
+                        required={state.lastName.required}
                       />
                     </div>
                     <div className="user-data">
@@ -158,7 +158,7 @@ class App extends React.Component {
                         pattern="^[^@]+@[^@]+\.[^@]+$"
                         value={state.email.value}
                         onChange={this.handleChange}
-                        required
+                        required={state.email.required}
                       />
                     </div>
                     <div className="user-data">
@@ -169,7 +169,7 @@ class App extends React.Component {
                         id="street-address"
                         value={state.streetAdress.value}
                         onChange={this.handleChange}
-                        required
+                        required={state.streetAdress.required}
                       />
                     </div>
                   </form>
@@ -182,66 +182,62 @@ class App extends React.Component {
             }} />
           <Route
             path="/step-3"
-            component={() => {
+            render={() => {
               return (
                 <div>
                   <form action="" method="get" className="card-data">
-                    <div className="payment__inputs">
-                      <div className="payment__card-group">
-                        <p className="text-input">
-                          <input
-                            type="text"
-                            class="text-input__input"
-                            name="cardNumber"
-                            id="payment__card-number"
-                            value={this.state.cardNumber.value}
-                            onChange={this.handleChange}
-                            required
-                          />
-                          <label className="text-input__label" htmlFor="payment__card-number">Payment card number</label>
-                        </p>
-                        <p className="text-input">
-                          <label className="text-input__label" htmlFor="payment__card-date">mm/yy</label>
-                          <input
-                            type="text"
-                            className="text-input__input"
-                            name="cardExpDate"
-                            id="payment__card-date"
-                            placeholder="mm/yy"
-                            pattern="^((0[1-9])|(1[0-2]))\/(\d{2})$"
-                            value={this.state.cardExpDate.value}
-                            onChange={this.handleChange}
-                            required
-                          />
-                        </p>
-                        <p className="text-input">
-                          <label className="text-input__label" htmlFor="payment__card-cvv">CVC</label>
-                          <input
-                            type="text"
-                            class="text-input__input"
-                            name="cardCVV"
-                            id="payment__card-cvv"
-                            pattern="[1-9][0-9][0-9]"
-                            value={this.state.cardCVV.value}
-                            onChange={this.handleChange}
-                            required
-                          />  
-                        </p>
-                      </div>
-                      <div className="payment__cardholder-group">
-                        <p className="text-input">
-                          <label className="text-input__label" htmlFor="payment__cardholder">Cardholder name</label>
-                          <input
-                            type="text"
-                            className="text-input__input"
-                            name="cardHolderName"
-                            id="payment__cardholder"
-                            value={this.state.cardHolderName.value}
-                            onChange={this.handleChange}
-                            required
-                          /> 
-                        </p>
-                      </div>
+                    <div className="payment-input">
+                      <p className="text-input">
+                        <input
+                          type="text"
+                          className="text-input__input"
+                          name="cardNumber"
+                          id="cardNumber"
+                          value={state.cardNumber.value}
+                          onChange={this.handleChange}
+                          required={state.cardNumber.required}
+                        />
+                        <label className="text-input__label" htmlFor="cardNumber">Payment card number</label>
+                      </p>
+                      <p className="text-input">
+                        <label className="text-input__label" htmlFor="card-date">mm/yy</label>
+                        <input
+                          type="text"
+                          className="text-input__input"
+                          name="cardExpDate"
+                          id="card-date"
+                          placeholder="mm/yy"
+                          pattern="^((0[1-9])|(1[0-2]))\/(\d{2})$"
+                          value={state.cardExpDate.value}
+                          onChange={this.handleChange}
+                          required={state.cardExpDate.required}
+                        />
+                      </p>
+                      <p className="text-input">
+                        <label className="text-input__label" htmlFor="card-cvv">CVC</label>
+                        <input
+                          type="text"
+                          class="text-input__input"
+                          name="cardCVV"
+                          id="card-cvv"
+                          pattern="[1-9][0-9][0-9]"
+                          value={state.cardCVV.value}
+                          onChange={this.handleChange}
+                          required={state.cardCVV.required}
+                        />
+                      </p>
+                      <p className="text-input">
+                        <label className="text-input__label" htmlFor="cardholder-name">Cardholder name</label>
+                        <input
+                          type="text"
+                          className="text-input__input"
+                          name="cardHolderName"
+                          id="cardholder-name"
+                          value={state.cardHolderName.value}
+                          onChange={this.handleChange}
+                          required={state.cardHolderName.required}
+                        />
+                      </p>
                     </div>
                   </form>
                   <div className="buttons">
@@ -253,41 +249,45 @@ class App extends React.Component {
             }} />
           <Route
             path="/step-4"
-            component={() => {
+            render={() => {
+              const getPrice = () => {
+                let price = state.duration.value * 2;
+
+                if (state.upfrontPayment.value) {
+                  price *= 0.9;
+                }
+
+                return price;
+              };
+
               return (
                 <div>
                   <div className="order-summary">
+                    Order summary:
                     <ul className="subscription-parameters-list">
-                      <li>Duration: </li>
-                      <li>Amount of gigabytes in a cloud: {this.state.gigabytes.value}</li>
-                      <li>Upfront payment: {() => { return (this.state.upfrontPayment.value) ? "Yes" : "No" }}</li>
+                      <li>Duration: {state.duration.value}</li>
+                      <li>Amount of gigabytes in a cloud: {state.gigabytes.value}</li>
+                      <li>
+                        {`Upfront payment: ${state.upfrontPayment.value ? 'Yes' : 'No'}`}
+                      </li>
                     </ul>
-                    <ul className="user-data-list">
-                      <li>{this.state.firstName.value}</li>
-                      <li>{this.state.lastName.value}</li>
-                      <li>{this.state.email.value}</li>
-                      <li>{this.state.streetAdress.value}</li>
-                    </ul>
-                    <ul className="card-data-list">
-                      <li>{this.state.cardNumber.value}</li>
-                      <li>{this.state.cardExpDate.value}</li>
-                      <li>{this.state.cardCVV.value}</li>
-                      <li>{this.state.cardHolderName.value}</li>
-                    </ul>
-                    <p className="price-output">$100</p>
-                    <p className="discount">- 10%</p>
+                    <p className="price-output">${getPrice()}</p>
+                    {
+                      state.upfrontPayment.value &&
+                      <p className="discount">10% discount included</p>
+                    }
                   </div>
                   <div className="terms-agreement-container">
                     <input
                       type="checkbox"
-                      id="isAgreed"
+                      id="terms-agreement"
                       name="isAgreed"
-                      value={this.state.isAgreed.value}
+                      value={state.isAgreed.value}
                       onChange={this.handleBooleanChange}
-                      checked={this.state.isAgreed.value}
+                      checked={state.isAgreed.value}
                     />
                     <label htmlFor="terms-agreement">
-                      Check here to indicate that you have read and agree to the terms of the <a href="https://cloud.google.com/terms/">Cloud Storage Terms of Service</a>
+                      Check here to indicate that you have read and agree to the terms of the <a target="blank" href="https://cloud.google.com/terms/">Cloud Storage Terms of Service</a>
                     </label>
                   </div>
                   <div className="buttons">
