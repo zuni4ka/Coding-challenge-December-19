@@ -1,12 +1,19 @@
 import * as React from 'react';
-import {Link} from 'react-router-dom';
+import {Link, Redirect} from 'react-router-dom';
 import Input from '../input';
 
 const Step2 = ({
     product,
     handleChange,
     handleNextStep,
+    previousPassed,
 }) => {
+    if (!previousPassed) {
+        return (
+            <Redirect to="/" />
+        );
+    }
+
     return (
         <div>
             <Input
@@ -42,11 +49,12 @@ const Step2 = ({
                 <Link className="return-button" to="/">Back</Link>
                 <Link
                     className="next-button"
+                    id="step2"
                     to="/step-3"
-                    onClick={(e) => {
-                        handleNextStep(e, ['firstName', 'lastName', 'email', 'streetAdress']);
-                    }}
-                >Next</Link>
+                    onClick={handleNextStep}
+                >
+                    Next
+                </Link>
             </div>
         </div>
     );

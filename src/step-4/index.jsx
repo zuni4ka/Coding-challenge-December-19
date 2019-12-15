@@ -1,11 +1,19 @@
 import * as React from 'react';
-import {Link} from 'react-router-dom';
+import {Link, Redirect} from 'react-router-dom';
 
 const Step4 = ({
     product,
     price,
     handleBooleanChange,
+    previousPassed,
+    handleSubmit,
 }) => {
+    if (!previousPassed) {
+        return (
+            <Redirect to="/step-3" />
+        );
+    }
+
     return (
         <div>
             <div className="order-summary">
@@ -35,10 +43,20 @@ const Step4 = ({
                 <label htmlFor="terms-agreement">
                     Check here to indicate that you have read and agree to the terms of the <a target="blank" href="https://cloud.google.com/terms/">Cloud Storage Terms of Service</a>
                 </label>
+                {
+                    product.isAgreed.error &&
+                    <div>{product.isAgreed.error}</div>
+                }
             </div>
             <div className="buttons">
                 <Link className="return-button" to="/step-3">Back</Link>
-                <button className="submit-order" type="submit">Confirm order</button>
+                <button
+                    className="submit-order"
+                    type="submit"
+                    onClick={handleSubmit}
+                >
+                    Confirm order
+                </button>
             </div>
         </div>
     );

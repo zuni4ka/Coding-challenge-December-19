@@ -1,8 +1,5 @@
 import * as React from 'react';
-import {
-  Route,
-  Switch
-} from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 
 import Step1 from './step-1';
 import Step2 from './step-2';
@@ -80,7 +77,29 @@ class App extends React.Component {
 
       isAgreed: {
         value: false,
-      }
+        error: null,
+      },
+
+      steps: {
+        step1: {
+          passed: false,
+          fields: ['duration', 'gigabytes', 'upfrontPayment'],
+        },
+        step2: {
+          passed: false,
+          fields: ['firstName', 'lastName', 'email', 'streetAdress'],
+        },
+        step3: {
+          passed: false,
+          fields: ['cardNumber', 'cardExpDate', 'cardCVV', 'cardHolderName'],
+        },
+        step4: {
+          passed: false,
+          fields: ['isAgreed'],
+        }
+      },
+
+      isCompleted: false,
     };
 
     this.getPrice = this.getPrice.bind(this);
@@ -88,6 +107,7 @@ class App extends React.Component {
     this.handleBooleanChange = this.handleBooleanChange.bind(this);
     this.handleNumberChange = this.handleNumberChange.bind(this);
     this.handleNextStep = this.handleNextStep.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleChange(e, convert) {
@@ -111,17 +131,19 @@ class App extends React.Component {
     this.handleChange(e, Number);
   }
 
-  handleNextStep(event, fields) {
+  handleNextStep(e) {
     let isValid = true;
+    const { id } = e.target;
+    const step = this.state.steps[id];
 
-    fields.forEach((name) => {
+    step.fields.forEach((name) => {
       const value = this.state[name].value;
 
-      if (!value) {
+      if (value === null) {
         this.setState({
           [name]: {
             ...this.state[name],
-            error: 'this field is required'
+            error: 'This field is required'
           }
         })
 
@@ -130,10 +152,56 @@ class App extends React.Component {
     });
 
     if (isValid) {
+      this.setState({
+        steps: {
+          ...this.state.steps,
+          [id]: {
+            ...step,
+            passed: true,
+          }
+        }
+      });
       return;
     }
 
-    event.preventDefault();
+    e.preventDefault();
+  };
+
+  getData() {
+    let data = {};
+
+    Object.values(this.state.steps)
+      .forEach((step) => {
+        step.fields
+          .forEach((field) => {
+            data[field] = this.state[field].value;
+          });
+      });
+
+    return data;
+  }
+
+  handleSubmit() {
+    if (!this.state.isAgreed.value) {
+      this.setState({
+        isAgreed: {
+          ...this.state.isAgreed,
+          error: 'You must agree to the terms and conditions',
+        }
+      });
+      return;
+    }
+
+    fetch('https://httpbin.org/post', {
+      method: 'POST',
+      body: JSON.stringify(this.getData()),
+    })
+      .then((response) => {
+        this.setState({isCompleted: true});
+      })
+      .catch((err) => {
+        // error
+      });
   };
 
   getPrice() {
@@ -149,6 +217,12 @@ class App extends React.Component {
   render() {
     const { state } = this;
 
+    if (state.isCompleted) {
+      return (
+        <div>Your order has been confirmed. Thank you!</div>
+      );
+    }
+
     return (
       <div className="App">
         <Switch>
@@ -160,6 +234,7 @@ class App extends React.Component {
                 product={state}
                 handleNumberChange={this.handleNumberChange}
                 handleBooleanChange={this.handleBooleanChange}
+                handleNextStep={this.handleNextStep}
               />
             )}
           />
@@ -168,6 +243,7 @@ class App extends React.Component {
             render={() => (
               <Step2
                 product={state}
+                previousPassed={state.steps.step1.passed}
                 handleChange={this.handleChange}
                 handleNextStep={this.handleNextStep}
               />
@@ -177,6 +253,7 @@ class App extends React.Component {
             render={() => (
               <Step3
                 product={state}
+                previousPassed={state.steps.step2.passed}
                 handleChange={this.handleChange}
                 handleNextStep={this.handleNextStep}
               />
@@ -187,7 +264,9 @@ class App extends React.Component {
               <Step4
                 product={state}
                 price={this.getPrice()}
+                previousPassed={state.steps.step3.passed}
                 handleBooleanChange={this.handleBooleanChange}
+                handleSubmit={this.handleSubmit}
               />
             )} />
         </Switch>
