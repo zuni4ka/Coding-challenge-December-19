@@ -7,6 +7,7 @@ const Input = ({
     name,
     id,
     type,
+    required,
 }) => {
     return (
         <div className="user-data">
@@ -17,7 +18,7 @@ const Input = ({
                 id={id}
                 value={field.value}
                 onChange={onChange}
-                required={field.required}
+                required={required}
             />
             {field.error &&
                 <div>{field.error}</div>

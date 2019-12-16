@@ -6,8 +6,6 @@ import Step2 from './step-2';
 import Step3 from './step-3';
 import Step4 from './step-4';
 
-import './App.css';
-
 class App extends React.Component {
   constructor() {
     super();
@@ -29,49 +27,41 @@ class App extends React.Component {
 
       firstName: {
         value: '',
-        required: true,
         error: null,
       },
 
       lastName: {
         value: '',
-        required: true,
         error: null,
       },
 
       email: {
         value: '',
-        required: true,
         error: null,
       },
 
       streetAdress: {
         value: '',
-        required: true,
         error: null,
       },
 
       cardNumber: {
         value: '',
-        required: true,
         error: null,
       },
 
       cardExpDate: {
         value: '',
-        required: true,
         error: null,
       },
 
       cardCVV: {
         value: '',
-        required: true,
         error: null,
       },
 
       cardHolderName: {
         value: '',
-        required: true,
         error: null,
       },
 
@@ -139,7 +129,7 @@ class App extends React.Component {
     step.fields.forEach((name) => {
       const value = this.state[name].value;
 
-      if (value === null) {
+      if ([null, ''].includes(value)) {
         this.setState({
           [name]: {
             ...this.state[name],
@@ -219,7 +209,7 @@ class App extends React.Component {
 
     if (state.isCompleted) {
       return (
-        <div>Your order has been confirmed. Thank you!</div>
+        <div>Your order has been received. Thank you!</div>
       );
     }
 
