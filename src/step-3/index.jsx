@@ -1,6 +1,9 @@
 import * as React from 'react';
-import {Link, Redirect} from 'react-router-dom';
+import {Redirect} from 'react-router-dom';
 import Input from '../input';
+import Navigation from '../navigation';
+
+import * as stepStyles from '../step.module.css';
 
 const Step3 = ({
     product,
@@ -15,7 +18,8 @@ const Step3 = ({
     }
 
     return (
-        <div className="payment-input">
+        <section>
+            <h1 className={stepStyles.step_title}>Step 3</h1>
             <Input
                 label="Payment card number:"
                 type="number"
@@ -49,18 +53,13 @@ const Step3 = ({
                 field={product.cardHolderName}
                 onChange={handleChange}
             />
-            <div className="buttons">
-                <Link className="return-button" to="/step-2">Back</Link>
-                <Link
-                    id="step3"
-                    className="next-button"
-                    to="/step-4"
-                    onClick={handleNextStep}
-                >
-                    Next
-                </Link>
-            </div>
-        </div>
+            <Navigation
+                backTo="/step-2"
+                nextId="step3"
+                nextTo="/step-4"
+                handleNextStep={handleNextStep}
+            />
+        </section>
     );
 };
 

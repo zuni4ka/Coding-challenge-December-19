@@ -1,6 +1,9 @@
 import * as React from 'react';
-import {Link, Redirect} from 'react-router-dom';
+import {Redirect} from 'react-router-dom';
 import Input from '../input';
+import Navigation from '../navigation';
+
+import * as stepStyles from '../step.module.css';
 
 const Step2 = ({
     product,
@@ -15,7 +18,8 @@ const Step2 = ({
     }
 
     return (
-        <div>
+        <section>
+            <h1 className={stepStyles.step_title}>Step 2</h1>
             <Input
                 label="First name:"
                 name="firstName"
@@ -45,18 +49,13 @@ const Step2 = ({
                 field={product.streetAdress}
                 onChange={handleChange}
             />
-            <div className="buttons">
-                <Link className="return-button" to="/">Back</Link>
-                <Link
-                    className="next-button"
-                    id="step2"
-                    to="/step-3"
-                    onClick={handleNextStep}
-                >
-                    Next
-                </Link>
-            </div>
-        </div>
+            <Navigation
+                nextId="step2"
+                nextTo="/step-3"
+                handleNextStep={handleNextStep}
+                backTo="/"
+            />
+        </section>
     );
 };
 

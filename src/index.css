@@ -11,9 +11,13 @@
   color: inherit;
   font: inherit;
   margin: 0;
-  outline: 0;
   padding: 0;
   vertical-align: baseline;
+}
+
+:root {
+  --color: #212529;
+  --color-lighter: #6c757d;
 }
 
 html {
@@ -26,9 +30,22 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color: var(--color);
+  line-height: 1.5;
 }
 
 li {
   list-style-type: none;
 }
 
+p {
+  margin-bottom: 0.5em;
+}
+
+select {
+  border: 1px solid var(--color-lighter);
+}
+
+input[type=checkbox] {
+  margin-right: 0.5em;
+}

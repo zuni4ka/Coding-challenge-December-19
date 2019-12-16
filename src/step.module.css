@@ -1,0 +1,13 @@
+.step_title {
+    margin-bottom: 0.5em;
+    font-size: 2em;
+}
+
+.step_field {
+    margin-bottom: 1em;
+}
+
+.step_label {
+    display: block;   
+    margin-bottom: 0.5em;
+}

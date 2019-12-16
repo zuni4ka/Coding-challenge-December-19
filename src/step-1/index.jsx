@@ -1,5 +1,9 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import cx from 'classnames';
+import Navigation from '../navigation';
+
+import * as stepStyles from '../step.module.css';
+import * as styles from './index.module.css';
 
 const Step1 = ({
   product,
@@ -8,45 +12,62 @@ const Step1 = ({
   handleNextStep,
 }) => {
   return (
-    <div>
+    <section>
+      <h1 className={stepStyles.step_title}>Step 1</h1>
       <p>Select a subscription duration:</p>
-      {product.duration.possible_values.map((value) => {
-        const id = `duration${value}`;
-        return (
-          <div key={id}>
-            <label htmlFor={id}>
-              {value} Month
-                </label>
-            <input
-              type="radio"
-              id={id}
-              name="duration"
-              value={value}
-              onChange={handleNumberChange}
-              checked={value === product.duration.value}
-            />
-          </div>
-        );
-      })}
-      <label htmlFor="gigabytes-select">Choose amount of your cloud gigabytes:</label>
-      <select
-        name="gigabytes"
-        id="gigabytes"
-        onChange={handleNumberChange}
-        value={product.gigabytes.value}
-      >
-        {product.gigabytes.possible_values.map((value) => {
+      <div className={cx(stepStyles.step_field, styles.duration_wrap)}>
+        {product.duration.possible_values.map((value) => {
+          const id = `duration${value}`;
+          const checked = value === product.duration.value;
+
           return (
-            <option
-              key={`gigabytes${value}`}
+            <label
+              className={cx(styles.duration_label, {
+                [styles.duration_label__checked]: checked,
+              })}
+              htmlFor={id}
+              key={id}
+              style={{ width: `${100 / product.duration.possible_values.length}%` }}
             >
-              {value}
-            </option>
+              <span className={styles.duration_title}>{value}</span>
+              <span className={styles.duration_text}>Months</span>
+              <input
+                type="radio"
+                id={id}
+                name="duration"
+                value={value}
+                onChange={handleNumberChange}
+                checked={checked}
+              />
+            </label>
           );
         })}
-      </select>
+      </div>
+      <div className={stepStyles.step_field}>
+        <label
+          htmlFor="gigabytes-select"
+          className={stepStyles.step_label}
+        >
+          Choose amount of your cloud gigabytes:
+      </label>
+        <select
+          name="gigabytes"
+          id="gigabytes"
+          onChange={handleNumberChange}
+          value={product.gigabytes.value}
+        >
+          {product.gigabytes.possible_values.map((value) => {
+            return (
+              <option
+                key={`gigabytes${value}`}
+              >
+                {value}
+              </option>
+            );
+          })}
+        </select>
+      </div>
       <div className="upfront-payment">
-        <label htmlFor="upfront">Upfront payment:</label>
         <input
           type="checkbox"
           id="upfrontPayment"
@@ -55,16 +76,14 @@ const Step1 = ({
           onChange={handleBooleanChange}
           checked={product.upfrontPayment.value}
         />
+        <label htmlFor="upfrontPayment">Upfront payment</label>
       </div>
-      <Link
-        className="next-button"
-        id="step1"
-        to="/step-2"
-        onClick={handleNextStep}
-      >
-        Next
-      </Link>
-    </div>
+      <Navigation
+        nextId="step1"
+        nextTo="/step-2"
+        handleNextStep={handleNextStep}
+      />
+    </section>
   );
 };
 

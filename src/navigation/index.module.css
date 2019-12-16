@@ -1,0 +1,15 @@
+.navigation {
+    display: flex;
+    margin-top: 2em;
+    margin-bottom: 1em;
+}
+
+.next {
+    padding: 1em;
+    margin-left: auto;
+}
+
+.back {
+    padding: 1em;
+    margin-right: auto;
+}

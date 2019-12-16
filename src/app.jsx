@@ -6,6 +6,8 @@ import Step2 from './step-2';
 import Step3 from './step-3';
 import Step4 from './step-4';
 
+import * as styles from './app.module.css';
+
 class App extends React.Component {
   constructor() {
     super();
@@ -133,7 +135,7 @@ class App extends React.Component {
         this.setState({
           [name]: {
             ...this.state[name],
-            error: 'This field is required'
+            error: 'This field is required',
           }
         })
 
@@ -187,7 +189,7 @@ class App extends React.Component {
       body: JSON.stringify(this.getData()),
     })
       .then((response) => {
-        this.setState({isCompleted: true});
+        this.setState({ isCompleted: true });
       })
       .catch((err) => {
         // error
@@ -209,12 +211,14 @@ class App extends React.Component {
 
     if (state.isCompleted) {
       return (
-        <div>Your order has been received. Thank you!</div>
+        <main className={styles.main}>
+          Your order has been received. Thank you!
+        </main>
       );
     }
 
     return (
-      <div className="App">
+      <main className={styles.main}>
         <Switch>
           <Route
             path="/"
@@ -260,7 +264,7 @@ class App extends React.Component {
               />
             )} />
         </Switch>
-      </div>
+      </main>
     );
   }
 }

@@ -1,0 +1,19 @@
+.definition_term {
+    font-size: 0.8;
+    font-weight: 600;
+}
+
+.definition_description {
+    margin-bottom: 0.5em;
+}
+
+.error {
+    font-size: 0.8em;
+    color: red;
+}
+
+.submit {
+    padding: 1em 2em;
+    border: 1px solid;
+    border-radius: 0.25em;
+}
